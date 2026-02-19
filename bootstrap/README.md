@@ -10,6 +10,7 @@ This repository includes a portable installer that recreates the current OpenCod
 - Instruction stack (`AGENTS.md`, orchestrator/planner/builder append files)
 - Shell strategy plugin pinned to a known commit
 - Permission mode set to `allow` to minimize approval prompts
+- OpenCode plugin list includes `oh-my-opencode-slim`, `opencode-handoff`, `opencode-ralph-loop`, and `@tarquinen/opencode-dcp`
 
 ## Usage
 
