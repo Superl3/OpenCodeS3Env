@@ -9,6 +9,7 @@ This repository includes a portable installer that recreates the current OpenCod
 - DCP and OCX config + lock files
 - Instruction stack (`AGENTS.md`, orchestrator/planner/builder append files)
 - Shell strategy plugin pinned to a known commit
+- Permission mode set to `allow` to minimize approval prompts
 
 ## Usage
 

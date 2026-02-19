@@ -14,7 +14,7 @@
     }
   },
   "compress": {
-    "permission": "deny"
+    "permission": "allow"
   },
   "prune": {
     "permission": "allow"

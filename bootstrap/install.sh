@@ -5,6 +5,8 @@ REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 ASSET_DIR="$REPO_ROOT/bootstrap/opencode"
 TARGET_DIR="${OPENCODE_CONFIG_DIR:-$HOME/.config/opencode}"
 INSTR_DIR="$TARGET_DIR/instructions"
+NODE_BIN_DIR="$TARGET_DIR/node_modules/.bin"
+export PATH="$NODE_BIN_DIR:$PATH"
 SHELL_STRATEGY_REPO="https://github.com/JRedeker/opencode-shell-strategy"
 SHELL_STRATEGY_REF="1f83c6e477d2d2f1cb791d7cc9be7f165a4f670b"
 TIMESTAMP="$(date +%Y%m%d-%H%M%S)"
@@ -90,31 +92,44 @@ install_js_dependencies() {
   log "WARN: bun/npm not found. Skipped dependency install."
 }
 
+install_ocx_cli() {
+  log "INFO: ocx CLI not found; attempting auto-install via bun/npm."
+
+  if command -v bun >/dev/null 2>&1; then
+    bun install --global ocx
+    return
+  fi
+
+  if command -v npm >/dev/null 2>&1; then
+    npm install --global ocx --yes
+    return
+  fi
+
+  log "ERROR: Unable to install ocx because neither bun nor npm is available."
+  return 1
+}
+
 restore_ocx_plugins() {
-  if [ "$TARGET_DIR" != "$HOME/.config/opencode" ]; then
-    log "WARN: Skipped OCX restore because OPENCODE_CONFIG_DIR is not global (~/.config/opencode)."
-    return
-  fi
-
   if ! command -v ocx >/dev/null 2>&1; then
-    log "WARN: ocx not found. Skipped OCX plugin restore."
-    return
+    if ! install_ocx_cli; then
+      log "WARN: ocx not available. Skipped OCX plugin restore."
+      return
+    fi
   fi
-
-  ocx init --global -f
 
   local packages
-  packages="$(node -e 'const fs=require("fs"); const p=process.argv[1]; const j=JSON.parse(fs.readFileSync(p,"utf8")); console.log(Object.keys(j.installed||{}).join(" "));' "$TARGET_DIR/ocx.lock")"
+  packages="$(node -e 'const fs=require("fs"); const p=process.argv[1]; const j=JSON.parse(fs.readFileSync(p,"utf8")); console.log(Object.keys(j.installed||{}).join(" "));' "$TARGET_DIR/ocx.lock" | tr -d '\r')"
 
   if [ -n "$packages" ]; then
     # shellcheck disable=SC2086
-    ocx add --global --force $packages
+    ocx add --cwd "$TARGET_DIR" --force $packages
   fi
 
   while IFS= read -r pkgver; do
+    pkgver="${pkgver%$'\r'}"
     [ -z "$pkgver" ] && continue
-    ocx update "$pkgver"
-  done < <(node -e 'const fs=require("fs"); const p=process.argv[1]; const j=JSON.parse(fs.readFileSync(p,"utf8")); for (const [name, meta] of Object.entries(j.installed||{})) { if (meta && meta.version) console.log(`${name}@${meta.version}`) }' "$TARGET_DIR/ocx.lock")
+    ocx update --cwd "$TARGET_DIR" "$pkgver"
+  done < <(node -e 'const fs=require("fs"); const p=process.argv[1]; const j=JSON.parse(fs.readFileSync(p,"utf8")); for (const [name, meta] of Object.entries(j.installed||{})) { if (meta && meta.version) console.log(`${name}@${meta.version}`) }' "$TARGET_DIR/ocx.lock" | tr -d '\r')
 }
 
 validate_json() {
