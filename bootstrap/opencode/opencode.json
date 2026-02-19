@@ -1,0 +1,24 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "plugin": [
+    "cc-safety-net",
+    "opencode-handoff@github:joshuadavidthomas/opencode-handoff#v0.4.0",
+    "opencode-ralph-loop@1.0.7",
+    "@tarquinen/opencode-dcp@latest"
+  ],
+  "agent": {
+    "explore": {
+      "disable": true
+    },
+    "general": {
+      "disable": true
+    }
+  },
+  "instructions": [
+    "~/.config/opencode/plugin/shell-strategy/shell_strategy.md",
+    "~/.config/opencode/instructions/AGENTS.md",
+    "~/.config/opencode/instructions/orchestrator_append.md",
+    "~/.config/opencode/instructions/planner_append.md",
+    "~/.config/opencode/instructions/builder_append.md"
+  ]
+}

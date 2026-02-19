@@ -1,0 +1,25 @@
+{
+  // Project-specific overrides can be set in .opencode/dcp.jsonc
+  "enabled": true,
+  "debug": false,
+  "pruneNotification": "minimal",
+  "pruneNotificationType": "chat",
+  "manualMode": {
+    "enabled": true,
+    "automaticStrategies": true
+  },
+  "tools": {
+    "settings": {
+      "nudgeEnabled": false
+    }
+  },
+  "compress": {
+    "permission": "deny"
+  },
+  "prune": {
+    "permission": "allow"
+  },
+  "distill": {
+    "permission": "allow"
+  }
+}

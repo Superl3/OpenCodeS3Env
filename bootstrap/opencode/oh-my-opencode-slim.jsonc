@@ -1,0 +1,86 @@
+{
+  "preset": "openai_pro",
+  "tmux": {
+    "enabled": false
+  },
+  "presets": {
+    "openai_pro": {
+      "agents": {
+        "oracle": {
+          "model": "openai/gpt-5.3-codex",
+          "variant": "high",
+          "skills": [],
+          "mcps": []
+        },
+        "orchestrator": {
+          "model": "openai/gpt-5.3-codex",
+          "skills": [
+            "*"
+          ],
+          "mcps": [
+            "websearch"
+          ]
+        },
+        "fixer": {
+          "model": "openai/gpt-5.3-codex-spark",
+          "variant": "low",
+          "skills": [],
+          "mcps": []
+        },
+        "designer": {
+          "model": "openai/gpt-5.3-codex",
+          "variant": "medium",
+          "skills": [
+            "agent-browser"
+          ],
+          "mcps": []
+        },
+        "librarian": {
+          "model": "openai/gpt-5.3-codex",
+          "variant": "low",
+          "skills": [],
+          "mcps": [
+            "websearch",
+            "context7",
+            "grep_app"
+          ]
+        },
+        "explorer": {
+          "model": "openai/gpt-5.3-codex-spark",
+          "variant": "low",
+          "skills": [],
+          "mcps": []
+        }
+      }
+    },
+    "openai_spark": {
+      "agents": {
+        "oracle": {
+          "model": "openai/gpt-5.3-codex",
+          "variant": "medium",
+          "skills": [],
+          "mcps": []
+        },
+        "orchestrator": {
+          "model": "openai/gpt-5.3-codex",
+          "skills": [
+            "basic"
+          ],
+          "mcps": []
+        },
+        "fixer": {
+          "model": "openai/gpt-5.3-codex-spark",
+          "variant": "low",
+          "skills": [],
+          "mcps": []
+        },
+        "designer": {
+          "model": "openai/gpt-5.3-codex",
+          "variant": "low",
+          "skills": [],
+          "mcps": []
+        }
+      }
+    }
+  }
+}
