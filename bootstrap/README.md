@@ -29,6 +29,12 @@ bash bootstrap/install.sh
 
 3. Start OpenCode and run a quick smoke test.
 
+4. Verify full instruction stack install (AGENTS + append files):
+
+```bash
+bash bootstrap/verify-opencode-state.sh
+```
+
 You can also reuse `bootstrap/AGENT_INSTALL_PROMPT.md` as a copy/paste prompt for an OpenCode agent.
 
 ## Update-safe workflow

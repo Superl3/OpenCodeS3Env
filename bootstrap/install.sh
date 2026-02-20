@@ -152,11 +152,24 @@ verify_required_state() {
       "opencode-ralph-loop@1.0.7",
       "@tarquinen/opencode-dcp@latest",
     ]
+    const requiredInstructions = [
+      "~/.config/opencode/plugin/shell-strategy/shell_strategy.md",
+      "~/.config/opencode/instructions/AGENTS.md",
+      "~/.config/opencode/instructions/orchestrator_append.md",
+      "~/.config/opencode/instructions/planner_append.md",
+      "~/.config/opencode/instructions/builder_append.md",
+    ]
     const config = JSON.parse(fs.readFileSync(path.join(target, "opencode.json"), "utf8"))
     const plugins = Array.isArray(config.plugin) ? config.plugin : []
     const missing = requiredPlugins.filter((name) => !plugins.includes(name))
     if (missing.length > 0) {
       console.error("ERROR: Missing required plugins:", missing.join(", "))
+      process.exit(1)
+    }
+    const instructions = Array.isArray(config.instructions) ? config.instructions : []
+    const missingInstructions = requiredInstructions.filter((entry) => !instructions.includes(entry))
+    if (missingInstructions.length > 0) {
+      console.error("ERROR: Missing required instruction entries:", missingInstructions.join(", "))
       process.exit(1)
     }
     const requiredFiles = [
