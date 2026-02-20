@@ -141,6 +141,45 @@ validate_json() {
     "$TARGET_DIR/package.json"
 }
 
+verify_required_state() {
+  node -e '
+    const fs = require("fs")
+    const path = require("path")
+    const target = process.argv[1]
+    const requiredPlugins = [
+      "oh-my-opencode-slim",
+      "opencode-handoff@github:joshuadavidthomas/opencode-handoff#v0.4.0",
+      "opencode-ralph-loop@1.0.7",
+      "@tarquinen/opencode-dcp@latest",
+    ]
+    const config = JSON.parse(fs.readFileSync(path.join(target, "opencode.json"), "utf8"))
+    const plugins = Array.isArray(config.plugin) ? config.plugin : []
+    const missing = requiredPlugins.filter((name) => !plugins.includes(name))
+    if (missing.length > 0) {
+      console.error("ERROR: Missing required plugins:", missing.join(", "))
+      process.exit(1)
+    }
+    const requiredFiles = [
+      "oh-my-opencode-slim.jsonc",
+      "plugin/shell-strategy/shell_strategy.md",
+      "instructions/AGENTS.md",
+      "instructions/orchestrator_append.md",
+      "instructions/planner_append.md",
+      "instructions/builder_append.md",
+    ]
+    const missingFiles = requiredFiles.filter((rel) => !fs.existsSync(path.join(target, rel)))
+    if (missingFiles.length > 0) {
+      console.error("ERROR: Missing required files:", missingFiles.join(", "))
+      process.exit(1)
+    }
+    if (config.autoupdate !== "notify") {
+      console.error("ERROR: opencode.json must set autoupdate to \"notify\" for stable bootstrap behavior")
+      process.exit(1)
+    }
+    console.log("OK required state")
+  ' "$TARGET_DIR"
+}
+
 main() {
   preflight_checks
 
@@ -166,6 +205,7 @@ main() {
   install_js_dependencies
   restore_ocx_plugins
   validate_json
+  verify_required_state
 
   if [ "$BACKUP_ENABLED" -eq 1 ]; then
     log "Backup created: $BACKUP_DIR"

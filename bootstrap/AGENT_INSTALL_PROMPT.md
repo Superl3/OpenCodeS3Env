@@ -9,4 +9,8 @@ Run `bash bootstrap/install.sh` in this repository and verify that:
 3) ~/.config/opencode/plugin/shell-strategy/shell_strategy.md exists.
 4) OCX components are restored from ~/.config/opencode/ocx.lock (auto-install ocx CLI if missing).
 Then report what changed and any skipped steps.
+
+After installation, run `bash bootstrap/verify-opencode-state.sh` and confirm `OK`.
+
+For future upgrades, always use `bash bootstrap/update-opencode-safe.sh` instead of raw `opencode upgrade`.
 ```

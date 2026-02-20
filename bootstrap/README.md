@@ -31,6 +31,22 @@ bash bootstrap/install.sh
 
 You can also reuse `bootstrap/AGENT_INSTALL_PROMPT.md` as a copy/paste prompt for an OpenCode agent.
 
+## Update-safe workflow
+
+If OpenCode updates have reset plugins in your environment, use the managed update command:
+
+```bash
+bash bootstrap/update-opencode-safe.sh
+```
+
+This runs `opencode upgrade`, reapplies the managed config, and verifies required plugins/files.
+
+You can verify state anytime with:
+
+```bash
+bash bootstrap/verify-opencode-state.sh
+```
+
 ## Optional environment variable
 
 - `OPENCODE_CONFIG_DIR`: override default target (`~/.config/opencode`)
@@ -40,3 +56,4 @@ You can also reuse `bootstrap/AGENT_INSTALL_PROMPT.md` as a copy/paste prompt fo
 - The installer is non-interactive and creates timestamped backups in the target config directory before overwriting files.
 - If `ocx` is installed, plugins from `ocx.lock` are restored automatically.
 - If `bun` is available, dependencies are installed with `bun`; otherwise it falls back to `npm`.
+- Managed `opencode.json` sets `autoupdate` to `notify` to reduce surprise resets.
